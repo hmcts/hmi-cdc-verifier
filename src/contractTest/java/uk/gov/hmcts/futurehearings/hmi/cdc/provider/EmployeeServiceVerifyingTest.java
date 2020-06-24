@@ -3,7 +3,6 @@ package uk.gov.hmcts.futurehearings.hmi.cdc.provider;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import au.com.dius.pact.provider.junit.State;
-import au.com.dius.pact.provider.junit5.HttpTestTarget;
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
 import au.com.dius.pact.provider.junit5.PactVerificationInvocationContextProvider;
 import org.junit.BeforeClass;
@@ -19,7 +18,6 @@ public class EmployeeServiceVerifyingTest {
 
     @BeforeEach
     void setupTestTarget(PactVerificationContext context) {
-        //context.setTarget(new HttpTestTarget("localhost", 4550, "/"));
     }
 
     @BeforeClass

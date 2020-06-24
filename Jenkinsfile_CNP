@@ -1,0 +1,79 @@
+#!groovy
+import uk.gov.hmcts.contino.AppPipelineDsl
+
+properties([
+    [
+        $class: 'GithubProjectProperty',
+        displayName: 'HMI ',
+        projectUrlStr: 'https://github.com/hmcts/hmi-cdc-consumer.git'
+    ],
+    pipelineTriggers([
+        [$class: 'GitHubPushTrigger']
+    ])
+])
+
+@Library("Infrastructure")
+
+def type = "java"
+def product = "hmi"
+def component = "cdc_provider"
+
+def secrets = [
+        's2s-${env}': [
+                secret('microservicekey-em-gw', 'FUNCTIONAL_TEST_CLIENT_S2S_TOKEN'),
+                secret('microservicekey-ccd-gw', 'FUNCTIONAL_TEST_CCD_GW_SERVICE_SECRET')
+        ],
+        'rpa-${env}': [
+                secret('show-oauth2-token', 'FUNCTIONAL_TEST_CLIENT_OAUTH_SECRET')
+        ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [ $class: 'AzureKeyVaultSecret',
+      secretType: 'Secret',
+      name: secretName,
+      version: '',
+      envVariable: envVar
+    ]
+}
+
+// Vars for Kubernetes
+env.IDAM_API_BASE_URI = 'https://idam-api.aat.platform.hmcts.net'
+env.OPEN_ID_API_BASE_URI = 'https://idam-web-public.aat.platform.hmcts.net/o'
+env.OIDC_ISSUER_BASE_URI = 'https://forgerock-am.service.core-compute-idam-aat.internal:8443/openam/oauth2/hmcts'
+env.S2S_BASE_URI = 'http://rpe-service-auth-provider-aat.service.core-compute-aat.internal'
+env.IDAM_WEBSHOW_WHITELIST = 'https://em-show-aat.service.core-compute-aat.internal/oauth2/callback'
+env.DM_STORE_APP_URL = 'http://dm-store-aat.service.core-compute-aat.internal'
+env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
+
+def vaultOverrides = [
+        'preview' : 'aat',
+        'spreview': 'saat'
+]
+
+withPipeline(type , product, component) {
+    //enableDbMigration('em-anno')
+    //overrideVaultEnvironments(vaultOverrides)
+    //loadVaultSecrets(secrets)
+    //disableLegacyDeployment()
+    //enableAksStagingDeployment()
+    after('test') {
+        sh '''
+        curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh > publish-swagger-docs.sh
+        sh ./publish-swagger-docs.sh
+         '''
+    }
+
+    //after('functionalTest:preview') {
+      //steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+    //}
+
+    //after('functionalTest:aat') {
+      //  steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+    //}
+
+    enablePactAs([
+            AppPipelineDsl.PactRoles.PROVIDER
+    ])
+
+}

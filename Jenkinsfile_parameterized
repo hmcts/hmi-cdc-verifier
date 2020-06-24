@@ -1,0 +1,34 @@
+#!groovy
+
+properties([
+        [
+                $class: 'GithubProjectProperty',
+                displayName: 'HMI To S & L CDC Consumer',
+                projectUrlStr: 'https://github.com/hmcts/hmi-cdc-consumer.git'
+        ],
+        pipelineTriggers([
+                [$class: 'GitHubPushTrigger']
+        ]),
+        parameters([
+                choice(name: 'ENVIRONMENT', choices: 'saat\nsprod\nsandbox', description: 'Environment where code should be build and deployed')
+        ]),
+])
+
+@Library("Infrastructure")
+
+def type = "java"
+def product = "hmi"
+def component = "cdc_provider"
+
+env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
+
+def vaultOverrides = [
+        'preview' : 'aat',
+        'spreview': 'saat'
+]
+
+withParameterizedPipeline(type, product, component, params.ENVIRONMENT, 'sandbox') {
+    enablePactAs([
+        AppPipelineDsl.PactRoles.PROVIDER
+    ])
+}

@@ -254,6 +254,14 @@ wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
+project.ext {
+  pactVersion = getCheckedOutGitCommitHash()
+}
+
+def getCheckedOutGitCommitHash() {
+  'git rev-parse --verify --short HEAD'.execute().text.trim()
+}
+
 pact {
 
   reports {
@@ -274,7 +282,7 @@ pact {
       path = System.getenv("PACT_SandL_PATH") ?: '/'
 
       hasPactsFromPactBroker (System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80') {
-        project.version '1.0'
+        project.version = project.pactVersion
       }
     }
   }
