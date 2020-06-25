@@ -11,7 +11,7 @@ plugins {
   id 'au.com.dius.pact' version '4.0.10'
 }
 
-group = 'uk.gov.hmcts.reform'
+group = 'uk.gov.hmcts.futurehearings.hmi.cdc.provider'
 version = '0.0.1'
 
 allprojects {
@@ -100,14 +100,14 @@ checkstyle {
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
-pmd {
+/*pmd {
   toolVersion = "6.18.0"
   sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
   reportsDir = file("$project.buildDir/reports/pmd")
   // https://github.com/pmd/pmd/issues/876
   ruleSets = []
   ruleSetFiles = files("config/pmd/ruleset.xml")
-}
+}*/
 
 /*jacocoTestReport {
   executionData(test, integration)
