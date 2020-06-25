@@ -109,14 +109,14 @@ pmd {
   ruleSetFiles = files("config/pmd/ruleset.xml")
 }
 
-jacocoTestReport {
+/*jacocoTestReport {
   executionData(test, integration)
   reports {
     xml.enabled = true
     csv.enabled = false
     xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
   }
-}
+}*/
 
 project.tasks['sonarqube'].dependsOn jacocoTestReport
 
@@ -142,6 +142,7 @@ dependencyUpdates {
 
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
+  System.setProperty('dependencyCheck.failBuild','false')
   // Specifies if the build should be failed if a CVSS score above a specified level is identified.
   // range of 0-10 fails the build, anything greater and it doesn't fail the build
   failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
