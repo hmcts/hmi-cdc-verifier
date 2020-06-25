@@ -118,6 +118,14 @@ checkstyle {
   }
 }*/
 
+def coverageExclusionList = [
+        '**uk/gov/hmcts/futurehearings/hmi/cdc/provider/config/*',
+        '**uk/gov/hmcts/futurehearings/hmi/cdc/provider/controllers/*',
+        '**uk/gov/hmcts/futurehearings/hmi/cdc/provider/dao/*',
+        '**uk/gov/hmcts/futurehearings/hmi/cdc/provider/dto/*',
+        '**uk/gov/hmcts/futurehearings/hmi/cdc/provider/*'
+]
+
 project.tasks['sonarqube'].dependsOn jacocoTestReport
 
 sonarqube {
@@ -125,6 +133,7 @@ sonarqube {
     property "sonar.projectName", "Reform :: spring-boot-template"
     property "sonar.projectKey", "uk.gov.hmcts.reform:spring-boot-template"
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
+    property "sonar.exclusions", coverageExclusionList.join(", ")
   }
 }
 
