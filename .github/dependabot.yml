@@ -1,0 +1,48 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: au.com.dius.pact
+    versions:
+    - 4.1.15
+    - 4.1.16
+    - 4.2.0
+    - 4.2.1
+    - 4.2.2
+    - 4.2.3
+  - dependency-name: org.springframework.boot:spring-boot-starter-test
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: org.springframework.boot
+    versions:
+    - 2.4.2
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: org.springframework:spring-web
+    versions:
+    - 5.3.3
+    - 5.3.4
+    - 5.3.5
+  - dependency-name: org.apache.tomcat.embed:tomcat-embed-websocket
+    versions:
+    - 10.0.0
+    - 10.0.2
+    - 10.0.4
+  - dependency-name: org.apache.tomcat.embed:tomcat-embed-core
+    versions:
+    - 10.0.0
+    - 10.0.2
+    - 10.0.4
+  - dependency-name: org.springframework.cloud:spring-cloud-starter-netflix-hystrix
+    versions:
+    - 2.2.6.RELEASE
+    - 2.2.7.RELEASE
+  - dependency-name: com.github.ben-manes.versions
+    versions:
+    - 0.36.0
